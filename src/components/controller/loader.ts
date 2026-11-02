@@ -1,19 +1,24 @@
+import { Callback, Endpoint, GetRespParams, HttpMethod, LoaderOptions, NewsQuery } from '../../types';
+
 class Loader {
-    constructor(baseLink, options) {
+    private readonly baseLink: string;
+    private readonly options: Readonly<LoaderOptions>;
+
+    constructor(baseLink: string, options: LoaderOptions) {
         this.baseLink = baseLink;
         this.options = options;
     }
 
-    getResp(
-        { endpoint, options = {} },
-        callback = () => {
+    protected getResp<T>(
+        { endpoint, options = {} }: GetRespParams,
+        callback: Callback<T> = () => {
             console.error('No callback for GET response');
         }
-    ) {
-        this.load('GET', endpoint, callback, options);
+    ): void {
+        this.load<T>(HttpMethod.Get, endpoint, callback, options);
     }
 
-    errorHandler(res) {
+    private errorHandler(res: Response): Response {
         if (!res.ok) {
             if (res.status === 401 || res.status === 404)
                 console.log(`Sorry, but there is ${res.status} error: ${res.statusText}`);
@@ -23,21 +28,25 @@ class Loader {
         return res;
     }
 
-    makeUrl(options, endpoint) {
-        const urlOptions = { ...this.options, ...options };
-        let url = `${this.baseLink}${endpoint}?`;
+    private makeUrl(options: Partial<NewsQuery>, endpoint: Endpoint): string {
+        const urlOptions: LoaderOptions = { ...this.options, ...options };
+        const params = Object.entries(urlOptions)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${key}=${value}`)
+            .join('&');
 
-        Object.keys(urlOptions).forEach((key) => {
-            url += `${key}=${urlOptions[key]}&`;
-        });
-
-        return url.slice(0, -1);
+        return `${this.baseLink}${endpoint}?${params}`;
     }
 
-    load(method, endpoint, callback, options = {}) {
+    private load<T>(
+        method: HttpMethod,
+        endpoint: Endpoint,
+        callback: Callback<T>,
+        options: Partial<NewsQuery> = {}
+    ): void {
         fetch(this.makeUrl(options, endpoint), { method })
-            .then(this.errorHandler)
-            .then((res) => res.json())
+            .then((res) => this.errorHandler(res))
+            .then((res) => res.json() as Promise<T>)
             .then((data) => callback(data))
             .catch((err) => console.error(err));
     }
