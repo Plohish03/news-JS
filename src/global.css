@@ -1,35 +1,124 @@
+:root {
+    --bg: #17181c;
+    --bg-card: #1f2127;
+    --text: #f2f3f5;
+    --text-muted: #a2a8b3;
+    --accent: #30c5ff;
+    --accent-2: #5ad67d;
+    --page-padding: 16px;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
 body {
-    color: #fff;
-    background: #17181c;
-    font-family: sans-serif;
-}
-
-header {
-    padding: 10px 30px;
-}
-
-header h1 {
-    font-size: 40px;
-    font-weight: 800;
-}
-
-footer {
-    height: 100px;
+    margin: 0;
+    min-height: 100vh;
     display: flex;
+    flex-direction: column;
+    color: var(--text);
+    background: var(--bg);
+    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+    line-height: 1.4;
+}
+
+.header,
+.main,
+.footer {
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding-left: var(--page-padding);
+    padding-right: var(--page-padding);
+}
+
+.header {
+    padding-top: 24px;
+    padding-bottom: 8px;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: clamp(1.8rem, 6vw, 3rem);
+    font-weight: 800;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.header__subtitle {
+    margin: 4px 0 0;
+    color: var(--text-muted);
+    font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+}
+
+.main {
+    flex: 1;
+}
+
+.footer {
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-}
-footer .copyright {
+    gap: 12px 24px;
+    margin-top: 32px;
+    padding-top: 24px;
+    padding-bottom: 24px;
+    border-top: 1px solid #2a2d35;
     font-size: 14px;
-    color: #333;
+    color: var(--text-muted);
     text-align: center;
 }
-footer .copyright a {
-    color: #444;
+
+.footer a {
+    color: var(--accent);
+    text-decoration: none;
 }
-footer .copyright a:hover {
-    color: #555;
+
+.footer a:hover {
+    color: var(--accent-2);
 }
-footer .copyright:before {
+
+.footer__logo {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 10px;
+    background: #fff;
+    border-radius: 8px;
+}
+
+.footer__logo img {
+    display: block;
+    height: 36px;
+    width: auto;
+    max-width: 100%;
+}
+
+.footer .copyright {
+    margin: 0;
+    flex-basis: 100%;
+    font-size: 12px;
+}
+
+.footer .copyright::before {
     content: '©';
+}
+
+@media (min-width: 768px) {
+    :root {
+        --page-padding: 32px;
+    }
+
+    .footer .copyright {
+        flex-basis: auto;
+    }
 }
