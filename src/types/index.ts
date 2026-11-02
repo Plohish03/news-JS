@@ -47,6 +47,14 @@ export interface ArticlesResponse {
 export type Callback<T> = (data: T) => void;
 
 export interface RequestOptions {
-    sources: string;
     apiKey: string;
+    sources: string;
+}
+
+export type LoaderOptions = Partial<RequestOptions>;
+export type NewsQuery = Pick<RequestOptions, 'sources'>;
+
+export interface GetRespParams {
+    endpoint: Endpoint;
+    options?: Partial<NewsQuery>;
 }
